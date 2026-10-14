@@ -34,13 +34,29 @@ footer a,a{color:var(--lava3)}
 <script>
 const grid=document.getElementById('grid'),lb=document.getElementById('lb'),lbImg=lb.querySelector('img');
 function empty(){grid.outerHTML='<div class="empty"><strong>No photos yet!</strong>Check back soon — class photos are on their way. 📸</div>'}
-fetch('photos.json',{cache:'no-store'}).then(r=>r.json()).then(list=>{
-  if(!Array.isArray(list)||!list.length)return empty();
-  list.forEach(p=>{const src='photos/'+encodeURIComponent(typeof p==='string'?p:p.file);
+// ===== CONFIG: paste your Apps Script web app URL between the quotes =====
+const DRIVE_SCRIPT_URL='';
+// =========================================================================
+function show(srcs){
+  if(!srcs.length)return empty();
+  srcs.forEach(({thumb,full})=>{
     const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Enlarge photo');
-    const i=new Image();i.loading='lazy';i.alt='';i.src=src;i.onload=()=>i.classList.add('loaded');
-    b.appendChild(i);b.onclick=()=>{lbImg.src=src;lb.classList.add('open')};grid.appendChild(b)});
-}).catch(empty);
+    const i=new Image();i.loading='lazy';i.alt='';i.referrerPolicy='no-referrer';i.src=thumb;i.onload=()=>i.classList.add('loaded');
+    b.appendChild(i);b.onclick=()=>{lbImg.src=full;lb.classList.add('open')};grid.appendChild(b)});
+}
+function fromJson(){
+  return fetch('photos.json',{cache:'no-store'}).then(r=>r.json()).then(list=>{
+    if(!Array.isArray(list))list=[];
+    show(list.map(p=>{const s='photos/'+encodeURIComponent(typeof p==='string'?p:p.file);return{thumb:s,full:s}}));
+  }).catch(empty);
+}
+function fromDrive(){
+  return fetch(DRIVE_SCRIPT_URL,{cache:'no-store'}).then(r=>r.json()).then(list=>{
+    if(!Array.isArray(list)||!list.length)throw 0;
+    show(list.map(p=>({thumb:'https://lh3.googleusercontent.com/d/'+p.id+'=w800',full:'https://lh3.googleusercontent.com/d/'+p.id+'=w2000'})));
+  });
+}
+(DRIVE_SCRIPT_URL?fromDrive().catch(fromJson):fromJson());
 lb.onclick=()=>lb.classList.remove('open');
 document.addEventListener('keydown',e=>{if(e.key==='Escape')lb.classList.remove('open')});
 </script>
