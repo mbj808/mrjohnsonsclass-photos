@@ -13,7 +13,7 @@
 :root{--lava1:#ff3d00;--lava2:#ff9100;--lava3:#ffd54f;--text:#f6ece4;--muted:#c9b4a6}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#000;color:var(--text);font-family:'Nunito',system-ui,sans-serif;line-height:1.6;min-height:100vh}
-nav{display:flex;justify-content:center;padding:.7rem 1rem;background:rgba(14,10,9,.92);border-bottom:1px solid #ff6d0033}
+nav{position:sticky;top:0;z-index:10;display:flex;justify-content:center;gap:1.4rem;flex-wrap:wrap;padding:.7rem 1rem;background:rgba(14,10,9,.92);border-bottom:1px solid #ff6d0033}
 nav a{color:var(--muted);text-decoration:none;font-weight:700}nav a:hover{color:var(--lava2)}
 h1{font-family:'Bungee',Impact,sans-serif;font-weight:400;text-align:center;font-size:clamp(2.2rem,7vw,4.5rem);color:var(--lava2);text-shadow:0 0 16px rgba(255,90,0,.5);margin:2.5rem 1rem 2rem}
 main{max-width:1200px;margin:0 auto;padding:0 1rem 3rem}
@@ -31,7 +31,7 @@ footer a,a{color:var(--lava3)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style></head>
 <body>
-<nav><a href="https://mrjohnsonsclass.org">&larr; Back to class site</a></nav>
+<nav aria-label="Main"><a href="https://mrjohnsonsclass.org">Home</a><a href="./" aria-current="page">Photos</a></nav>
 <h1>Class Photos</h1>
 <main><div id="grid" class="grid"></div></main>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Enlarged photo"><img alt=""></div>
